@@ -1,0 +1,60 @@
+compositor MipMap
+{
+    technique
+    {
+        texture mip0 target_width target_height PF_FLOAT32_R
+        texture mip1 target_width_scaled 0.5 target_height_scaled 0.5 PF_FLOAT32_R
+        texture mip2 target_width_scaled 0.25 target_height_scaled 0.25 PF_FLOAT32_R
+
+        target mip0
+        {
+            input none
+            pass clear
+            {
+            }
+
+            shadows off
+            material_scheme Mip_0
+
+            pass render_scene
+            {
+            }
+        }
+
+
+        target mip1
+        {
+            input none
+
+            pass render_quad
+            {
+                material Mip1_mat
+                input 0 mip0
+            }
+        }
+
+
+
+        target mip2
+        {
+            input none
+
+            pass render_quad
+            {
+                material Mip1_mat
+                input 0 mip1
+            }
+        }
+
+
+        target_output
+        {
+            input none
+            pass render_quad
+            {
+                material render_depth
+                input 0 mip2
+            }
+        }
+    }
+}

@@ -1,0 +1,43 @@
+vertex_program stdPos_VP glsl
+{
+    source stdPos_VP.glsl
+    default_params
+    {
+        param_named_auto MVP worldviewproj_matrix
+    }
+}
+
+
+vertex_program std_VP glsl
+{
+    source StdQuad_Tex2a_VP.glsl
+    default_params
+    {
+        param_named_auto worldViewProj worldviewproj_matrix
+    }
+}
+
+
+fragment_program Red_FP glsl
+{
+    source Red_FP.glsl
+}
+
+
+material Red
+{
+    technique
+    {
+        pass
+        {
+            vertex_program_ref std_VP
+            {
+            }
+
+            fragment_program_ref Red_FP
+            {
+            }
+
+        }
+    }
+}

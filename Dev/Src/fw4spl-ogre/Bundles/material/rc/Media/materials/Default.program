@@ -1,0 +1,285 @@
+vertex_program Lighting_VP glsl
+{
+    source Lighting.glsl
+    preprocessor_defines NUM_LIGHTS=2
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program Lighting_FP glsl
+{
+    source Lighting.glsl
+    preprocessor_defines NUM_LIGHTS=2
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program MaterialColor_PixelLighting_FP glsl
+{
+    source MaterialColor_FP.glsl
+    preprocessor_defines PIXEL_LIGHTING=1
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program MaterialColor_Gouraud_FP glsl
+{
+    source MaterialColor_FP.glsl
+}
+//---------------------------------------------------------------------------
+
+fragment_program MaterialColor_Flat_FP glsl
+{
+    source MaterialColor_FP.glsl
+    preprocessor_defines FLAT=1
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program MaterialColor_Edge_FP glsl
+{
+    source MaterialColor_FP.glsl
+    preprocessor_defines EDGE=1
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program MaterialColor_Negato_FP glsl
+{
+    source MaterialColor_FP.glsl
+    preprocessor_defines NEGATO=1
+}
+
+//-----------------------------------------------------------------------------
+
+fragment_program Default_Flat_FP_glsl glsl
+{
+    source Default_FP.glsl
+    attach MaterialColor_Flat_FP
+    default_params
+    {
+        param_named u_defaultTex int 0
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DepthPeelingCommon_FP glsl
+{
+    source DepthPeelingCommon_FP.glsl
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DepthPeeling_depth_map_FP glsl
+{
+    source DepthPeelingDepthMap_FP.glsl
+    attach DepthPeelingCommon_FP
+    default_params
+    {
+        param_named_auto u_diffuse surface_diffuse_colour
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DepthPeeling_peel_Flat_FP_glsl glsl
+{
+    source DepthPeelingPeel_FP.glsl
+    attach DepthPeelingCommon_FP
+    attach MaterialColor_Flat_FP
+    default_params
+    {
+        param_named u_fragData0 int 0
+        param_named_auto u_vpWidth viewport_width
+        param_named_auto u_vpHeight viewport_height
+        param_named_auto u_diffuse surface_diffuse_colour
+        param_named u_defaultTex int 1
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DepthPeeling_blend_FP glsl
+{
+    source DepthPeelingBlend_FP.glsl
+    default_params
+    {
+        param_named u_fragData0 int 0
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DepthPeeling_final_FP glsl
+{
+    source DepthPeelingFinal_FP.glsl
+    attach DepthPeelingCommon_FP
+    default_params
+    {
+        param_named u_fragData0 int 0
+        param_named u_fragData1 int 1
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program DualDepthPeeling_peel_init_FP_glsl glsl
+{
+    source DualDepthPeelingInit_FP.glsl
+}
+
+//------------------------------------------------------------------
+
+fragment_program HybridTransparency_transmittance_blend_FP glsl
+{
+    source WeightedBlended_Transmittance_Blend_FP.glsl
+    preprocessor_defines HYBRID=1
+    attach DepthPeelingCommon_FP
+    default_params
+    {
+        param_named u_frontDepthBuffer int 0
+        param_named u_occlusionDepthBuffer int 1
+        param_named_auto u_vpWidth viewport_width
+        param_named_auto u_vpHeight viewport_height
+        param_named_auto u_diffuse surface_diffuse_colour
+    }
+}
+
+//------------------------------------------------------------------
+
+fragment_program HybridTransparency_occlusion_map_FP glsl
+{
+    source HybridTransparency_Occlusion_Map_FP.glsl
+    default_params
+    {
+        param_named_auto u_diffuse surface_diffuse_colour
+    }
+}
+
+//------------------------------------------------------------------
+
+fragment_program WeightedBlended_occlusion_map_FP glsl
+{
+    source WeightedBlended_Occlusion_Map_FP.glsl
+    default_params
+    {
+        param_named_auto u_diffuse surface_diffuse_colour
+    }
+}
+
+//------------------------------------------------------------------
+
+fragment_program WeightedBlended_transmittance_blend_FP glsl
+{
+    source WeightedBlended_Transmittance_Blend_FP.glsl
+    default_params
+    {
+        param_named u_occlusionDepthBuffer int 0
+        param_named_auto u_vpWidth viewport_width
+        param_named_auto u_vpHeight viewport_height
+        param_named_auto u_diffuse surface_diffuse_colour
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program Render_VP glsl
+{
+    source Render_VP.glsl
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program RenderScene_VP glsl
+{
+    source RenderScene_VP.glsl
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program RenderQuad_VP glsl
+{
+    source RenderQuad_VP.glsl
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+    }
+}
+
+//---------------------------------------------------------------------------
+
+fragment_program RenderQuad_FP glsl
+{
+    source RenderQuad_FP.glsl
+    default_params
+    {
+        param_named u_fragData int 0
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program RenderScene_Flat_VP_glsl glsl
+{
+    source RenderScene_VP.glsl
+    preprocessor_defines FLAT=1
+    attach Lighting_VP
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+        param_named_auto u_world world_matrix
+        param_named_auto u_normalMatrix inverse_transpose_world_matrix
+        param_named_auto u_cameraPos camera_position
+        param_named_auto u_lightDir light_position_array 2
+        param_named_auto u_ambient surface_ambient_colour
+        param_named_auto u_diffuse surface_diffuse_colour
+        param_named_auto u_specular surface_specular_colour
+        param_named_auto u_shininess surface_shininess
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program RenderScene_Gouraud_VP_glsl glsl
+{
+    source RenderScene_VP.glsl
+    attach Lighting_VP
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+        param_named_auto u_world world_matrix
+        param_named_auto u_normalMatrix inverse_transpose_world_matrix
+        param_named_auto u_cameraPos camera_position
+        param_named_auto u_lightDir light_position_array 2
+        param_named_auto u_ambient surface_ambient_colour
+        param_named_auto u_diffuse surface_diffuse_colour
+        param_named_auto u_specular surface_specular_colour
+        param_named_auto u_shininess surface_shininess
+    }
+}
+
+//---------------------------------------------------------------------------
+
+vertex_program RenderScene_PixelLighting_VP_glsl glsl
+{
+    source RenderScene_VP.glsl
+    preprocessor_defines PIXEL_LIGHTING=1
+    default_params
+    {
+        param_named_auto u_worldViewProj worldviewproj_matrix
+        param_named_auto u_world world_matrix
+        param_named_auto u_normalMatrix inverse_transpose_world_matrix
+    }
+}
+
+
+//---------------------------------------------------------------------------
