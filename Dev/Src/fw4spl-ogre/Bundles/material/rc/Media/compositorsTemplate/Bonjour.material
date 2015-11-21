@@ -38,6 +38,10 @@ material Red
             {
             }
 
+            texture_unit MipMap_tex
+            {
+            }
+
         }
     }
 }

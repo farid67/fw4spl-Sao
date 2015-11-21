@@ -13,7 +13,7 @@ void main()
 
 //    else
 //        fragColour = vec4(0.5,0.1,0.1,1.0);
-    fragColour = textureLod(MipMap_tex,oUv0,0);
+    fragColour.rgb = vec3(textureLod(MipMap_tex,oUv0,1).r);
 
     // normal Texture version -> use when getting mip0 from the last compositor
 //    if (texture(RT,oUv0).r >  0.8 && texture(RT,oUv0).g > 0.8 )

@@ -114,7 +114,7 @@ void CompositorChainManager::setCompositorChain(std::vector<CompositorIdType> co
     {
         if(this->getCompositorManager()->resourceExists(compositorName))
         {
-            std::cout << "Le compositor " << static_cast<std::string>(compositorName) << "existe est a correctement été chargé " << std::endl;
+            std::cout << "Le compositor " << static_cast<std::string>(compositorName) << "existe et a correctement été chargé " << std::endl;
             m_compositorChain.push_back(CompositorType(compositorName, true));
             compositorManager->addCompositor(m_ogreViewport, compositorName);
             compositorManager->setCompositorEnabled(m_ogreViewport, compositorName, true);

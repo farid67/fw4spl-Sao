@@ -38,8 +38,12 @@ SaoCompositorChainManager::SaoCompositorChainManager(::Ogre::Viewport* viewport)
 void SaoCompositorChainManager::setSaoState(bool state)
 {
     std::cout << "try to change the state of the sao manager" << std::endl;
+
+
     // get the Compositor Manager of Ogre (of the scene)
     ::Ogre::CompositorManager* compositorManager = this->getCompositorManager();
+
+
     // if here, we add the compositor present of the chain in the Ogre chain compositor
     if (state)
     {
@@ -49,35 +53,28 @@ void SaoCompositorChainManager::setSaoState(bool state)
             ::Ogre::CompositorManager::getSingletonPtr()->getCompositorChain(m_ogreViewport);
         ::Ogre::CompositorChain::InstanceIterator compIter = compChain->getCompositors();
 
-        std::cout << "Liste des compositors actuellement dans la chaine " << std::endl;
+        // vérifier que les compositors MipMap et Test sont bien dans la liste
+        if (compChain->getCompositor("MipMap") == nullptr)
+            compositorManager->addCompositor(m_ogreViewport,"MipMap");
+
+        if (compChain->getCompositor("Test") == nullptr)
+            compositorManager->addCompositor(m_ogreViewport,"Test");
+
+        compChain->getCompositor("Test")->addListener(new SaoListener(m_ogreViewport));
+
+        // désactivation des autres compositors -> uniquement pour les tests, surement non nécessaire
+//        while( compIter.hasMoreElements())
+//        {
+//            ::Ogre::CompositorInstance* targetComp = compIter.getNext();
+//            std::cout << targetComp->getCompositor()->getName() << std::endl;
+//            if (targetComp->getEnabled())
+//                targetComp->setEnabled(false);
+//  //              std::cout << "      Enable" << std::endl;
+//        }
 
 
-        // à faire : vérifier que MipMap et Test sont dans la liste, les ajoutés sinon avec addCompositor
-        while( compIter.hasMoreElements())
-        {
-            ::Ogre::CompositorInstance* targetComp = compIter.getNext();
-            std::cout << targetComp->getCompositor()->getName() << std::endl;
-            if (targetComp->getEnabled())
-                std::cout << "      Enable" << std::endl;
-        }
+        compIter = compChain->getCompositors();
 
-
-               compIter = compChain->getCompositors();
-
-        while( compIter.hasMoreElements())
-        {
-            ::Ogre::CompositorInstance* targetComp = compIter.getNext();
-            std::cout << targetComp->getCompositor()->getName() << std::endl;
-            if (targetComp->getEnabled())
-                std::cout << "      Enable" << std::endl;
-
-            if (targetComp->getCompositor()->getName() == "Test")
-            {
-                std::cout << "attach a Listener " << std::endl;
-                targetComp->addListener(new SaoListener(m_ogreViewport));
-            }
-
-        }
 
         // add all the compositor of the chain
         std::cout << "try to enable the sao chain" << std::endl;
@@ -95,18 +92,9 @@ void SaoCompositorChainManager::setSaoState(bool state)
 
         }
 
-
-        // check the content of the Ogre Compositor chain
-
-        std::cout << "Liste des compositors actuellement dans la chaine " << std::endl;
-
-
-
-
     }
     else // disable the sao Chain
     {
-
         for(SaoCompositorIdType compositorName : m_saoChain)
         {
             if(this->getCompositorManager()->resourceExists(compositorName))

@@ -5,8 +5,9 @@ compositor Test
     {
         // Temporary textures -> this texture is considered to be the MipMap texture
         texture rt0 target_width target_height PF_FLOAT32_R
+        texture rt1 target_width target_height PF_FLOAT32_R
 
-        target rt0
+        target rt1
         {
             // Render output from previous compositor (or original scene)
             input previous
