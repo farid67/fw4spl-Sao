@@ -79,7 +79,7 @@ namespace fwRenderOgre // on s'insère ici
 
 
 //                ::Ogre::Compositor *MipMap,*Test;
-                ::Ogre::TexturePtr mip0,mip1,mip2, rt0;
+                ::Ogre::TexturePtr mip0,mip1,mip2,mip3,mip4,mip5,mip6,mip7, rt0;
                 while( compIter.hasMoreElements())
                 {
                     ::Ogre::CompositorInstance* targetComp = compIter.getNext();
@@ -88,8 +88,13 @@ namespace fwRenderOgre // on s'insère ici
                         mip0 = targetComp->getTextureInstance("mip0",0);
                         mip1 = targetComp->getTextureInstance("mip1",0);
                         mip2 = targetComp->getTextureInstance("mip2",0);
+                        mip3 = targetComp->getTextureInstance("mip3",0);
+                        mip4 = targetComp->getTextureInstance("mip4",0);
+                        mip5 = targetComp->getTextureInstance("mip5",0);
+                        mip6 = targetComp->getTextureInstance("mip6",0);
+                        mip7 = targetComp->getTextureInstance("mip7",0);
                     }
-                    if (targetComp->getCompositor()->getName() == "Test")
+                    if (targetComp->getCompositor()->getName() == "AO_Samples")
                     {
                         rt0 = targetComp->getTextureInstance("rt0",0);
                     }
@@ -106,7 +111,7 @@ namespace fwRenderOgre // on s'insère ici
                 rt0.get()->changeGroupOwnership(mip0.get()->getGroup());
                 rt0.get()->setWidth(mip0.get()->getWidth());
                 rt0.get()->setHeight(mip0.get()->getHeight());
-                rt0.get()->setNumMipmaps(2);
+                rt0.get()->setNumMipmaps(7);
                 rt0.get()->setFormat(::Ogre::PixelFormat::PF_FLOAT32_R);
                 rt0.get()->setUsage(::Ogre::TU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
                 rt0.get()->setTextureType(::Ogre::TextureType::TEX_TYPE_2D);
@@ -119,6 +124,12 @@ namespace fwRenderOgre // on s'insère ici
                 rt0.get()->getBuffer(0,0)->blit(mip0.get()->getBuffer());
                 rt0.get()->getBuffer(0,1)->blit(mip1.get()->getBuffer());
                 rt0.get()->getBuffer(0,2)->blit(mip2.get()->getBuffer());
+                rt0.get()->getBuffer(0,3)->blit(mip2.get()->getBuffer());
+                rt0.get()->getBuffer(0,4)->blit(mip2.get()->getBuffer());
+                rt0.get()->getBuffer(0,5)->blit(mip2.get()->getBuffer());
+                rt0.get()->getBuffer(0,6)->blit(mip2.get()->getBuffer());
+                rt0.get()->getBuffer(0,7)->blit(mip2.get()->getBuffer());
+
 
             }
 

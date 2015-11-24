@@ -583,8 +583,8 @@ void Layer::resetCameraClippingRange(const ::Ogre::AxisAlignedBox& worldCoordBou
         // Make sure near is not bigger than far
         maxNear = (maxNear >= minFar) ? (0.01f*minFar) : (maxNear);
 
-        m_camera->setNearClipDistance( maxNear );
-        m_camera->setFarClipDistance( minFar );
+        m_camera->setNearClipDistance( 1 );
+        m_camera->setFarClipDistance( 10000 );
     }
 }
 

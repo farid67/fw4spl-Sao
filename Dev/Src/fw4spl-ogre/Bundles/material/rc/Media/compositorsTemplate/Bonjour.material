@@ -17,6 +17,17 @@ vertex_program std_VP glsl
     }
 }
 
+vertex_program samples_VP glsl
+{
+    source samples_VP.glsl
+    default_params
+    {
+        param_named_auto MVP worldviewproj_matrix
+        param_named_auto w viewport_width
+        param_named_auto h viewport_height
+    }
+}
+
 
 fragment_program Red_FP glsl
 {
@@ -30,7 +41,7 @@ material Red
     {
         pass
         {
-            vertex_program_ref std_VP
+            vertex_program_ref samples_VP
             {
             }
 

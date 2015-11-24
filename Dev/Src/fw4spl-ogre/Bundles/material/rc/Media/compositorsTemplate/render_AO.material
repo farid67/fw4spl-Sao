@@ -8,31 +8,33 @@ vertex_program stdPos_VP glsl
 }
 
 
-fragment_program Mip_FP glsl
+
+fragment_program AO_render_FP glsl
 {
-    source Mip_FP.glsl
+    source AO_render_FP.glsl
     default_params
     {
-        param_named_auto zn near_clip_distance
-        param_named_auto zf far_clip_distance
+        param_named_auto u_vpWidth viewport_width
+        param_named_auto u_vpHeight viewport_height
     }
 }
 
-
-
-
-material Mip0_mat
+material render_AO
 {
     technique
     {
         pass
         {
-            cull_software front
             vertex_program_ref stdPos_VP
             {
             }
 
-            fragment_program_ref Mip_FP
+            fragment_program_ref AO_render_FP
+            {
+                param_named scale int 2
+            }
+
+            texture_unit AO_map
             {
             }
         }

@@ -11,8 +11,8 @@ namespace fwRenderOgre {
 SaoCompositorChainManager::SaoCompositorChainManager(): m_ogreViewport(0)
 {
     m_saoChain.push_back("MipMap");
-    m_saoChain.push_back("Test");
-
+//    m_saoChain.push_back("Test");
+    m_saoChain.push_back("AO_Samples");
     // create MipMap texture
 }
 
@@ -21,7 +21,8 @@ SaoCompositorChainManager::SaoCompositorChainManager(::Ogre::Viewport* viewport)
     // create the chain
     m_saoChain.push_back("MipMap");
     //here add the second compositor
-    m_saoChain.push_back("Test");
+//    m_saoChain.push_back("Test");
+    m_saoChain.push_back("AO_Samples");
 
 }
 
@@ -57,10 +58,14 @@ void SaoCompositorChainManager::setSaoState(bool state)
         if (compChain->getCompositor("MipMap") == nullptr)
             compositorManager->addCompositor(m_ogreViewport,"MipMap");
 
-        if (compChain->getCompositor("Test") == nullptr)
-            compositorManager->addCompositor(m_ogreViewport,"Test");
+//        if (compChain->getCompositor("Test") == nullptr)
+//            compositorManager->addCompositor(m_ogreViewport,"Test");
 
-        compChain->getCompositor("Test")->addListener(new SaoListener(m_ogreViewport));
+        if (compChain->getCompositor("AO_Samples") == nullptr)
+            compositorManager->addCompositor(m_ogreViewport,"AO_Samples");
+
+
+        compChain->getCompositor("AO_Samples")->addListener(new SaoListener(m_ogreViewport));
 
         // désactivation des autres compositors -> uniquement pour les tests, surement non nécessaire
 //        while( compIter.hasMoreElements())
